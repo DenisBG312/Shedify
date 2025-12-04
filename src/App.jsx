@@ -1,26 +1,89 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
 import Navbar from "./components/Navbar";
 import Dashboard from "./components/Dashboard";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import PrivateRoute from "./components/guards/PrivateRoute";
+
+// Pet pages
+import PetsCatalog from "./components/pets/PetsCatalog";
+import PetDetails from "./components/pets/PetDetails";
+import CreatePet from "./components/pets/CreatePet";
+import EditPet from "./components/pets/EditPet";
+
+// Other pages
+import SheltersPage from "./components/shelters/SheltersPage";
+import FavoritesPage from "./components/favorites/FavoritesPage";
+import EventsPage from "./components/events/EventsPage";
+import ProfilePage from "./components/profile/ProfilePage";
+
 import './index.css';
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Navbar />
+    <AuthProvider>
+      <BrowserRouter>
+        <Navbar />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/projects" element={<div>Projects Page</div>} />
-        <Route path="/tasks" element={<div>Tasks Page</div>} />
-        <Route path="/calendar" element={<div>Calendar Page</div>} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
-    </BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          
+          <Route path="/pets" element={<PetsCatalog />} />
+          <Route path="/pets/:id" element={<PetDetails />} />
+          
+          <Route path="/shelters" element={<SheltersPage />} />
+          <Route path="/events" element={<EventsPage />} />
+          
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          <Route 
+            path="/dashboard" 
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            } 
+          />
+          
+          <Route 
+            path="/pets/create" 
+            element={
+              <PrivateRoute>
+                <CreatePet />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/pets/:id/edit" 
+            element={
+              <PrivateRoute>
+                <EditPet />
+              </PrivateRoute>
+            } 
+          />
+          
+          <Route 
+            path="/favorites" 
+            element={
+              <PrivateRoute>
+                <FavoritesPage />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/profile" 
+            element={
+              <PrivateRoute>
+                <ProfilePage />
+              </PrivateRoute>
+            } 
+          />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

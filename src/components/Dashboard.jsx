@@ -1,7 +1,7 @@
 import { 
   TrendingUp, 
-  FolderKanban, 
-  CheckSquare, 
+  PawPrint,
+  Heart,
   Calendar,
   Clock,
   Target,
@@ -12,19 +12,19 @@ import {
 export default function Dashboard() {
   const stats = [
     {
-      title: "Active Projects",
-      value: "12",
-      change: "+3 this month",
-      icon: FolderKanban,
+      title: "Pets Available",
+      value: "128",
+      change: "+14 new this week",
+      icon: PawPrint,
       iconColor: "text-blue-400",
       gradient: "from-blue-500 to-cyan-500",
       bgGradient: "from-blue-500/20 to-cyan-500/20"
     },
     {
-      title: "Completed Tasks",
-      value: "48",
-      change: "+12 this week",
-      icon: CheckSquare,
+      title: "Successful Adoptions",
+      value: "3,240",
+      change: "+62 this month",
+      icon: Heart,
       iconColor: "text-purple-400",
       gradient: "from-purple-500 to-pink-500",
       bgGradient: "from-purple-500/20 to-pink-500/20"
@@ -39,9 +39,9 @@ export default function Dashboard() {
       bgGradient: "from-orange-500/20 to-red-500/20"
     },
     {
-      title: "Team Members",
-      value: "24",
-      change: "+2 new",
+      title: "Partner Shelters",
+      value: "84",
+      change: "+4 new partners",
       icon: Users,
       iconColor: "text-green-400",
       gradient: "from-green-500 to-emerald-500",
@@ -50,17 +50,17 @@ export default function Dashboard() {
   ];
 
   const recentTasks = [
-    { id: 1, title: "Design new landing page", project: "Website Redesign", priority: "high", dueDate: "Today" },
-    { id: 2, title: "Review marketing campaign", project: "Q1 Campaign", priority: "medium", dueDate: "Tomorrow" },
-    { id: 3, title: "Update documentation", project: "API Docs", priority: "low", dueDate: "In 3 days" },
-    { id: 4, title: "Client meeting preparation", project: "Client Relations", priority: "high", dueDate: "Today" }
+    { id: 1, title: "Review adoption application", project: "Bella (Dog • 2 y/o)", priority: "high", dueDate: "Today" },
+    { id: 2, title: "Schedule home visit", project: "Luna (Cat • 1 y/o)", priority: "medium", dueDate: "Tomorrow" },
+    { id: 3, title: "Upload new pet photos", project: "Max (Dog • 3 y/o)", priority: "low", dueDate: "In 3 days" },
+    { id: 4, title: "Confirm event attendance", project: "Weekend Adoption Fair", priority: "high", dueDate: "Today" }
   ];
 
   const projects = [
-    { id: 1, name: "Website Redesign", progress: 75, status: "In Progress", color: "blue" },
-    { id: 2, name: "Mobile App Development", progress: 45, status: "In Progress", color: "purple" },
-    { id: 3, name: "Marketing Campaign", progress: 90, status: "Almost Done", color: "green" },
-    { id: 4, name: "API Integration", progress: 30, status: "In Progress", color: "orange" }
+    { id: 1, name: "City Shelter Adoption Drive", progress: 75, status: "In Progress", color: "blue" },
+    { id: 2, name: "Senior Pets Month Campaign", progress: 45, status: "In Progress", color: "purple" },
+    { id: 3, name: "Summer Cat Adoption Fair", progress: 90, status: "Almost Done", color: "green" },
+    { id: 4, name: "New Shelter Onboarding", progress: 30, status: "In Progress", color: "orange" }
   ];
 
   const getPriorityColor = (priority) => {
@@ -96,10 +96,10 @@ export default function Dashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-extrabold text-white mb-2">
-            Dashboard
+            Shelter Dashboard
           </h1>
           <p className="text-slate-400 text-lg">
-            Welcome back! Here's what's happening with your projects.
+            Welcome back! Here’s what’s happening across your pets, adopters, and partner shelters.
           </p>
         </div>
 
@@ -136,7 +136,7 @@ export default function Dashboard() {
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-white flex items-center gap-2">
                   <Clock className="w-5 h-5 text-blue-400" />
-                  Recent Tasks
+                  Recent Activity
                 </h2>
                 <button className="text-sm text-blue-400 hover:text-blue-300 transition-colors">
                   View All
@@ -174,7 +174,7 @@ export default function Dashboard() {
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-white flex items-center gap-2">
                   <Target className="w-5 h-5 text-purple-400" />
-                  Projects
+                  Campaigns
                 </h2>
                 <button className="text-sm text-purple-400 hover:text-purple-300 transition-colors">
                   View All
@@ -212,16 +212,16 @@ export default function Dashboard() {
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <button className="p-4 rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-500/30 hover:border-blue-400/50 hover:from-blue-500/30 hover:to-cyan-500/30 transition-all duration-300 text-white font-medium">
-              New Project
+              Add New Pet
             </button>
             <button className="p-4 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 hover:border-purple-400/50 hover:from-purple-500/30 hover:to-pink-500/30 transition-all duration-300 text-white font-medium">
-              Add Task
+              Review Applications
             </button>
             <button className="p-4 rounded-lg bg-gradient-to-br from-orange-500/20 to-red-500/20 border border-orange-500/30 hover:border-orange-400/50 hover:from-orange-500/30 hover:to-red-500/30 transition-all duration-300 text-white font-medium">
               Schedule Event
             </button>
             <button className="p-4 rounded-lg bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-500/30 hover:border-green-400/50 hover:from-green-500/30 hover:to-emerald-500/30 transition-all duration-300 text-white font-medium">
-              View Reports
+              Adoption Reports
             </button>
           </div>
         </div>

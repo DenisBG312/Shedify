@@ -1,23 +1,48 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { LogIn, Mail, Lock, ArrowRight, Sparkles } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Login() {
+  const navigate = useNavigate();
+  const { login, isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+    setError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login:", formData);
+    setError("");
+    setLoading(true);
+
+    const { data, error: loginError } = await login(formData.email, formData.password);
+
+    if (loginError) {
+      setError(loginError.message || "Failed to sign in. Please check your credentials.");
+      setLoading(false);
+      return;
+    }
+
+    if (data) {
+      navigate("/dashboard");
+    }
   };
 
   return (
@@ -27,11 +52,11 @@ export default function Login() {
           <div className="flex items-center justify-center mb-2">
             <Sparkles className="w-6 h-6 text-blue-400 mr-2" />
             <h1 className="text-2xl font-extrabold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Shedify
+              PetHub
             </h1>
           </div>
           <h2 className="text-xl font-bold text-white mb-0.5">Welcome Back</h2>
-          <p className="text-slate-400 text-xs">Sign in to your account to continue</p>
+          <p className="text-slate-400 text-xs">Sign in to manage your adoptions, favorites, and shelter updates.</p>
         </div>
 
         <div className="rounded-2xl bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 p-5 shadow-2xl">
@@ -100,13 +125,26 @@ export default function Login() {
               </div>
             </div>
 
+            {error && (
+              <div className="p-3 rounded-lg bg-red-500/20 border border-red-500/30 text-red-400 text-xs">
+                {error}
+              </div>
+            )}
+
             <button
               type="submit"
-              className="group relative w-full flex justify-center items-center gap-2 py-2.5 px-4 border border-transparent rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/50"
+              disabled={loading}
+              className="group relative w-full flex justify-center items-center gap-2 py-2.5 px-4 border border-transparent rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
-              <LogIn className="w-4 h-4" />
-              Sign In
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              {loading ? (
+                <>Loading...</>
+              ) : (
+                <>
+                  <LogIn className="w-4 h-4" />
+                  Sign In
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </>
+              )}
             </button>
           </form>
 
@@ -116,7 +154,7 @@ export default function Login() {
                 <div className="w-full border-t border-slate-700"></div>
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="px-2 bg-slate-800/50 text-slate-400">New to Shedify?</span>
+                <span className="px-2 bg-slate-800/50 text-slate-400">New to PetHub?</span>
               </div>
             </div>
 

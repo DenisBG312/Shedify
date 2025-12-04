@@ -15,32 +15,32 @@ export default function Home() {
   const features = [
     {
       icon: FolderKanban,
-      title: "Project Management",
-      description: "Organize and track all your projects in one place with intuitive kanban boards.",
+      title: "Browse Adoptable Pets",
+      description: "Search hundreds of dogs, cats, and other pets waiting for a loving home.",
       iconColor: "text-blue-400",
       gradient: "from-blue-500 to-cyan-500",
       bgGradient: "from-blue-500/20 to-cyan-500/20"
     },
     {
       icon: CheckSquare,
-      title: "Task Tracking",
-      description: "Stay on top of your tasks with smart prioritization and deadline management.",
+      title: "Save Your Favorites",
+      description: "Keep track of the pets you love and revisit them anytime from your favorites.",
       iconColor: "text-purple-400",
       gradient: "from-purple-500 to-pink-500",
       bgGradient: "from-purple-500/20 to-pink-500/20"
     },
     {
       icon: Calendar,
-      title: "Calendar Integration",
-      description: "Sync your schedule and never miss an important deadline or meeting.",
+      title: "Adoption Events",
+      description: "Discover local adoption events and meet pets in person.",
       iconColor: "text-orange-400",
       gradient: "from-orange-500 to-red-500",
       bgGradient: "from-orange-500/20 to-red-500/20"
     },
     {
       icon: Users,
-      title: "Team Collaboration",
-      description: "Work seamlessly with your team members and share updates in real-time.",
+      title: "Verified Shelters",
+      description: "Connect only with trusted shelters and rescues that care about every animal.",
       iconColor: "text-green-400",
       gradient: "from-green-500 to-emerald-500",
       bgGradient: "from-green-500/20 to-emerald-500/20"
@@ -55,8 +55,8 @@ export default function Home() {
     },
     {
       icon: Shield,
-      title: "Secure & Private",
-      description: "Your data is protected with enterprise-grade security and encryption.",
+      title: "Safe & Caring Matches",
+      description: "We help match pets with the right families for long-term, loving homes.",
       iconColor: "text-teal-400",
       gradient: "from-teal-500 to-cyan-500",
       bgGradient: "from-teal-500/20 to-cyan-500/20"
@@ -64,10 +64,10 @@ export default function Home() {
   ];
 
   const stats = [
-    { value: "10K+", label: "Active Users" },
-    { value: "50K+", label: "Projects Completed" },
-    { value: "99.9%", label: "Uptime" },
-    { value: "24/7", label: "Support" }
+    { value: "12K+", label: "Pets Adopted" },
+    { value: "3K+", label: "Happy Families" },
+    { value: "800+", label: "Partner Shelters" },
+    { value: "24/7", label: "Support & Care" }
   ];
 
   return (
@@ -79,33 +79,33 @@ export default function Home() {
             <div className="flex items-center justify-center mb-6">
               <Sparkles className="w-8 h-8 text-blue-400 mr-2" />
               <span className="text-blue-400 font-semibold text-sm uppercase tracking-wider">
-                Welcome to Shedify
+                Welcome to PetHub
               </span>
             </div>
             <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-6 leading-tight">
-              Organize Your Work,
+              Find Your New
               <br />
               <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Achieve Your Goals
+                Best Friend
               </span>
             </h1>
             <p className="text-xl md:text-2xl text-slate-400 mb-10 max-w-3xl mx-auto leading-relaxed">
-              The all-in-one project management platform that helps teams collaborate,
-              track progress, and deliver results faster than ever.
+              PetHub connects loving families with pets in need of a home. 
+              Discover adoptable animals near you and start your adoption journey today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link
-                to="/dashboard"
+                to="/pets"
                 className="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl font-semibold text-white overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50"
               >
                 <span className="relative z-10 flex items-center gap-2">
-                  Get Started
+                  Browse Pets
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </span>
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </Link>
               <button className="px-8 py-4 rounded-xl font-semibold text-white border-2 border-slate-600 hover:border-slate-500 bg-slate-800/50 backdrop-blur-sm transition-all duration-300 hover:bg-slate-700/50">
-                Learn More
+                How Adoption Works
               </button>
             </div>
           </div>
@@ -132,10 +132,10 @@ export default function Home() {
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
             Everything You Need to
-            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"> Succeed</span>
+            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"> Adopt Safely</span>
           </h2>
           <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-            Powerful features designed to streamline your workflow and boost productivity
+            Thoughtful tools that make discovering, meeting, and adopting pets simple and stress-free.
           </p>
         </div>
 
@@ -171,10 +171,11 @@ export default function Home() {
           <div className="relative z-10">
             <Zap className="w-12 h-12 text-yellow-400 mx-auto mb-6" />
             <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
-              Ready to Get Started?
+              Ready to Meet Your New Best Friend?
             </h2>
             <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-              Join thousands of teams already using Shedify to manage their projects and boost productivity.
+              Thousands of pets are waiting for a second chance. 
+              Create your free PetHub account and start your adoption journey today.
             </p>
             <Link
               to="/dashboard"
