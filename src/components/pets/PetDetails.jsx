@@ -4,6 +4,7 @@ import { Heart, ArrowLeft, Calendar, User, Edit, Trash2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { useAuth } from '../../contexts/AuthContext';
+import EditPetModal from './EditPetModal';
 
 export default function PetDetails() {
   const { id } = useParams();
@@ -15,6 +16,7 @@ export default function PetDetails() {
   const [isOwner, setIsOwner] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [liking, setLiking] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchPet = async () => {
@@ -142,6 +144,25 @@ export default function PetDetails() {
     }
   };
 
+  const handleEditSuccess = async () => {
+    // Refresh pet data after successful edit
+    try {
+      const { data, error: fetchError } = await supabase
+        .from('pets')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      if (data) {
+        setPet(data);
+      }
+    } catch (err) {
+      console.error('Error refreshing pet data:', err);
+    }
+  };
+
   if (loading) {
     return <LoadingSpinner fullScreen text="Loading pet details..." />;
   }
@@ -229,13 +250,13 @@ export default function PetDetails() {
 
               {isOwner && (
                 <div className="flex gap-3 mb-6">
-                  <Link
-                    to={`/pets/${pet.id}/edit`}
+                  <button
+                    onClick={() => setIsEditModalOpen(true)}
                     className="flex items-center gap-2 px-4 py-2 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-600/50 hover:border-slate-500/50 rounded-lg text-slate-300 hover:text-white transition-all"
                   >
                     <Edit className="w-4 h-4" />
                     Edit
-                  </Link>
+                  </button>
                   <button
                     onClick={handleDelete}
                     className="flex items-center gap-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 hover:border-red-500/50 rounded-lg text-red-400 hover:text-red-300 transition-all"
@@ -311,6 +332,13 @@ export default function PetDetails() {
             </div>
           </div>
         </div>
+
+        <EditPetModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          onSuccess={handleEditSuccess}
+          pet={pet}
+        />
       </div>
     </div>
   );
