@@ -3,76 +3,7 @@ import { Link } from 'react-router-dom';
 import { Heart, Search, Filter, Plus } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import LoadingSpinner from '../ui/LoadingSpinner';
-
-// Placeholder data matching Supabase schema - fallback if database is empty or error occurs
-// const placeholderPets = [
-//     {
-//       id: '1',
-//       name: 'Buddy',
-//       breed: 'Golden Retriever',
-//       age: 3,
-//       description: 'Friendly and energetic golden retriever looking for a loving family. Great with kids and other pets.',
-//       image_url: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=400&fit=crop',
-//       owner_id: 'user-1',
-//       likes: 42,
-//       created_at: new Date().toISOString()
-//     },
-//     {
-//       id: '2',
-//       name: 'Luna',
-//       breed: 'Siamese Cat',
-//       age: 2,
-//       description: 'Playful and affectionate Siamese cat. Loves cuddles and playing with toys.',
-//       image_url: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&h=400&fit=crop',
-//       owner_id: 'user-2',
-//       likes: 38,
-//       created_at: new Date().toISOString()
-//     },
-//     {
-//       id: '3',
-//       name: 'Max',
-//       breed: 'German Shepherd',
-//       age: 4,
-//       description: 'Loyal and intelligent German Shepherd. Perfect for an active family.',
-//       image_url: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=400&fit=crop',
-//       owner_id: 'user-3',
-//       likes: 56,
-//       created_at: new Date().toISOString()
-//     },
-//     {
-//       id: '4',
-//       name: 'Whiskers',
-//       breed: 'Persian Cat',
-//       age: 1,
-//       description: 'Gentle and calm Persian cat. Perfect for a quiet home environment.',
-//       image_url: 'https://images.unsplash.com/photo-1596854407944-bf87f6fdd49e?w=400&h=400&fit=crop',
-//       owner_id: 'user-4',
-//       likes: 29,
-//       created_at: new Date().toISOString()
-//     },
-//     {
-//       id: '5',
-//       name: 'Rocky',
-//       breed: 'Bulldog',
-//       age: 5,
-//       description: 'Charming and laid-back bulldog. Great companion for any family.',
-//       image_url: 'https://images.unsplash.com/photo-1583337130417-3916bcea4d69?w=400&h=400&fit=crop',
-//       owner_id: 'user-5',
-//       likes: 33,
-//       created_at: new Date().toISOString()
-//     },
-//     {
-//       id: '6',
-//       name: 'Mittens',
-//       breed: 'Maine Coon',
-//       age: 2,
-//       description: 'Large and friendly Maine Coon. Very social and loves attention.',
-//       image_url: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop',
-//       owner_id: 'user-6',
-//       likes: 47,
-//       created_at: new Date().toISOString()
-//     }
-// ];
+import CreatePetModal from './CreatePetModal';
 
 export default function PetsCatalog() {
   const [pets, setPets] = useState([]);
@@ -80,31 +11,36 @@ export default function PetsCatalog() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterBreed, setFilterBreed] = useState('all');
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const fetchPets = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const { data, error: fetchError } = await supabase
+        .from('pets')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (fetchError) throw fetchError;
+      
+      setPets(data || []);
+    } catch (err) {
+      console.error('Error fetching pets:', err);
+      setError('Failed to load pets.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchPets = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        const { data, error: fetchError } = await supabase
-          .from('pets')
-          .select('*')
-          .order('created_at', { ascending: false });
-        
-        if (fetchError) throw fetchError;
-        
-        setPets(data);
-      } catch (err) {
-        console.error('Error fetching pets:', err);
-        setError('Failed to load pets. Using demo data.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchPets();
   }, []);
+
+  const handlePetCreated = () => {
+    fetchPets(); // Refresh the list
+  };
 
   const filteredPets = pets.filter(pet => {
     const matchesSearch = pet.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -134,13 +70,13 @@ export default function PetsCatalog() {
               Discover your perfect companion from our loving pets waiting for a home
             </p>
           </div>
-          <Link
-            to="/pets/create"
+          <button
+            onClick={() => setIsModalOpen(true)}
             className="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/50"
           >
             <Plus className="w-5 h-5" />
             Add Pet
-          </Link>
+          </button>
         </div>
 
         {/* Error Message */}
@@ -257,6 +193,13 @@ export default function PetsCatalog() {
             ))}
           </div>
         )}
+
+        {/* Create Pet Modal */}
+        <CreatePetModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSuccess={handlePetCreated}
+        />
       </div>
     </div>
   );

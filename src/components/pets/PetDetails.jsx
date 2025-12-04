@@ -1,19 +1,241 @@
-import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { Heart, ArrowLeft, Calendar, User, Edit, Trash2 } from 'lucide-react';
+import { supabase } from '../../lib/supabase';
+import LoadingSpinner from '../ui/LoadingSpinner';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function PetDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
+  const [pet, setPet] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isOwner, setIsOwner] = useState(false);
+
+  useEffect(() => {
+    const fetchPet = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const { data, error: fetchError } = await supabase
+          .from('pets')
+          .select('*')
+          .eq('id', id)
+          .single();
+
+        if (fetchError) throw fetchError;
+
+        if (!data) {
+          setError('Pet not found');
+          return;
+        }
+
+        setPet(data);
+        
+        // Check if current user is the owner
+        if (isAuthenticated && user && data.owner_id === user.id) {
+          setIsOwner(true);
+        }
+      } catch (err) {
+        console.error('Error fetching pet:', err);
+        setError('Failed to load pet details');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchPet();
+    }
+  }, [id, isAuthenticated, user]);
+
+  const handleDelete = async () => {
+    if (!isOwner) return;
+    
+    if (!window.confirm('Are you sure you want to delete this pet listing?')) {
+      return;
+    }
+
+    try {
+      const { error: deleteError } = await supabase
+        .from('pets')
+        .delete()
+        .eq('id', id);
+
+      if (deleteError) throw deleteError;
+
+      navigate('/pets');
+    } catch (err) {
+      console.error('Error deleting pet:', err);
+      alert('Failed to delete pet');
+    }
+  };
+
+  if (loading) {
+    return <LoadingSpinner fullScreen text="Loading pet details..." />;
+  }
+
+  if (error || !pet) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <Link
+            to="/pets"
+            className="inline-flex items-center gap-2 text-slate-400 hover:text-white mb-6 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Pets
+          </Link>
+          <div className="text-center py-16">
+            <div className="text-red-400 text-xl mb-4">{error || 'Pet not found'}</div>
+            <Link
+              to="/pets"
+              className="inline-block px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold rounded-lg transition-all duration-300 hover:scale-105"
+            >
+              Browse All Pets
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-4xl font-extrabold text-white mb-8">Pet Details</h1>
-        <div className="text-slate-400">
-          <p>Pet ID: {id}</p>
-          <p className="mt-4">Details placeholder - Will display information about pet with ID: {id}</p>
-          <p className="mt-4">This is a PUBLIC page - accessible without authentication</p>
+        {/* Back Button */}
+        <Link
+          to="/pets"
+          className="inline-flex items-center gap-2 text-slate-400 hover:text-white mb-6 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Pets
+        </Link>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Pet Image */}
+          <div className="relative">
+            <div className="relative h-96 lg:h-[500px] rounded-xl overflow-hidden bg-slate-700/30 border border-slate-700/50">
+              {pet.image_url ? (
+                <img
+                  src={pet.image_url}
+                  alt={pet.name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.src = 'https://via.placeholder.com/600x600?text=Pet+Image';
+                  }}
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-500/20">
+                  <div className="text-slate-500 text-center">
+                    <p className="text-lg">No image available</p>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            {/* Likes Badge */}
+            <div className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/90 backdrop-blur-sm border border-slate-700/50">
+              <Heart className="w-5 h-5 text-red-400 fill-red-400" />
+              <span className="text-white font-semibold">{pet.likes || 0}</span>
+            </div>
+          </div>
+
+          {/* Pet Info */}
+          <div className="flex flex-col">
+            {/* Header */}
+            <div className="mb-6">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-2">
+                    {pet.name}
+                  </h1>
+                  <p className="text-xl text-slate-400">{pet.breed || 'Mixed Breed'}</p>
+                </div>
+                {pet.age && (
+                  <div className="px-4 py-2 rounded-lg bg-blue-500/20 border border-blue-500/30">
+                    <span className="text-blue-400 font-semibold">
+                      {pet.age} {pet.age === 1 ? 'year' : 'years'} old
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Owner Actions */}
+              {isOwner && (
+                <div className="flex gap-3 mb-6">
+                  <Link
+                    to={`/pets/${pet.id}/edit`}
+                    className="flex items-center gap-2 px-4 py-2 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-600/50 hover:border-slate-500/50 rounded-lg text-slate-300 hover:text-white transition-all"
+                  >
+                    <Edit className="w-4 h-4" />
+                    Edit
+                  </Link>
+                  <button
+                    onClick={handleDelete}
+                    className="flex items-center gap-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 hover:border-red-500/50 rounded-lg text-red-400 hover:text-red-300 transition-all"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Description */}
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-white mb-3">About {pet.name}</h2>
+              <p className="text-slate-300 text-lg leading-relaxed">
+                {pet.description || 'No description available.'}
+              </p>
+            </div>
+
+            {/* Details Card */}
+            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6 mb-6">
+              <h3 className="text-xl font-bold text-white mb-4">Details</h3>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 text-slate-300">
+                  <Calendar className="w-5 h-5 text-blue-400" />
+                  <span>
+                    <span className="text-slate-400">Posted:</span>{' '}
+                    {new Date(pet.created_at).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </span>
+                </div>
+                {pet.breed && (
+                  <div className="flex items-center gap-3 text-slate-300">
+                    <span className="text-slate-400">Breed:</span>
+                    <span>{pet.breed}</span>
+                  </div>
+                )}
+                {pet.age && (
+                  <div className="flex items-center gap-3 text-slate-300">
+                    <span className="text-slate-400">Age:</span>
+                    <span>{pet.age} {pet.age === 1 ? 'year' : 'years'}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 mt-auto">
+              <button className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/50">
+                <Heart className="w-5 h-5" />
+                Like This Pet
+              </button>
+              <button className="flex-1 px-6 py-4 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-600/50 hover:border-slate-500/50 text-white font-semibold rounded-lg transition-all duration-300">
+                Contact Owner
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
