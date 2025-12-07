@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Search, Filter, Plus } from 'lucide-react';
+import { Heart, Search, Filter, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import CreatePetModal from './CreatePetModal';
@@ -15,6 +15,8 @@ export default function PetsCatalog() {
   const [filterBreed, setFilterBreed] = useState('all');
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const petsPerPage = 6;
 
   const fetchPets = async () => {
     try {
@@ -57,6 +59,20 @@ export default function PetsCatalog() {
   });
 
   const uniqueBreeds = [...new Set(pets.map(pet => pet.breed).filter(Boolean))];
+
+  const totalPages = Math.ceil(filteredPets.length / petsPerPage);
+  const startIndex = (currentPage - 1) * petsPerPage;
+  const endIndex = startIndex + petsPerPage;
+  const currentPets = filteredPets.slice(startIndex, endIndex);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, filterBreed]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   if (loading) {
     return <LoadingSpinner fullScreen text="Loading pets..." />;
@@ -119,8 +135,14 @@ export default function PetsCatalog() {
           </div>
         </div>
 
-        <div className="mb-6 text-slate-400 text-sm">
-          Showing {filteredPets.length} {filteredPets.length === 1 ? 'pet' : 'pets'}
+        <div className="mb-6 flex items-center justify-between">
+          <div className="text-slate-400 text-sm">
+            {filteredPets.length === 0 ? (
+              <>Showing 0 of 0 {filteredPets.length === 1 ? 'pet' : 'pets'}</>
+            ) : (
+              <>Showing {startIndex + 1}-{Math.min(endIndex, filteredPets.length)} of {filteredPets.length} {filteredPets.length === 1 ? 'pet' : 'pets'}</>
+            )}
+          </div>
         </div>
 
         {filteredPets.length === 0 ? (
@@ -129,18 +151,76 @@ export default function PetsCatalog() {
             <p className="text-slate-500">Try adjusting your search or filters</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredPets.map((pet) => (
-              <PetCard key={pet.id} pet={pet} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {currentPets.map((pet) => (
+                <PetCard key={pet.id} pet={pet} />
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2">
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="p-2 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-600/50 hover:border-slate-500/50 text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-slate-800/50"
+                  aria-label="Previous page"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+
+                <div className="flex items-center gap-2">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                    if (
+                      page === 1 ||
+                      page === totalPages ||
+                      (page >= currentPage - 1 && page <= currentPage + 1)
+                    ) {
+                      return (
+                        <button
+                          key={page}
+                          onClick={() => handlePageChange(page)}
+                          className={`min-w-[40px] px-3 py-2 rounded-lg font-semibold transition-all duration-300 ${
+                            currentPage === page
+                              ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg shadow-purple-500/50'
+                              : 'bg-slate-800/50 hover:bg-slate-700/50 border border-slate-600/50 hover:border-slate-500/50 text-white'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      );
+                    } else if (
+                      page === currentPage - 2 ||
+                      page === currentPage + 2
+                    ) {
+                      return (
+                        <span key={page} className="text-slate-500 px-2">
+                          ...
+                        </span>
+                      );
+                    }
+                    return null;
+                  })}
+                </div>
+
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="p-2 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-600/50 hover:border-slate-500/50 text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-slate-800/50"
+                  aria-label="Next page"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
+            )}
+          </>
         )}
 
         <CreatePetModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onSuccess={handlePetCreated}
-        />
+        />  
       </div>
     </div>
   );
