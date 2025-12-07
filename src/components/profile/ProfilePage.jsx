@@ -10,8 +10,7 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     petsCreated: 0,
-    petsAdopted: 0,
-    favoritesCount: 0
+    petsAdopted: 0
   });
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState('');
@@ -43,13 +42,9 @@ export default function ProfilePage() {
         .select('*', { count: 'exact', head: true })
         .eq('adopted_by', user.id);
 
-      const likedPets = JSON.parse(localStorage.getItem('likedPets') || '[]');
-      const favoritesCount = likedPets.length;
-
       setStats({
         petsCreated: createdCount || 0,
         petsAdopted: adoptedCount || 0,
-        favoritesCount: favoritesCount
       });
 
       setName(user.user_metadata?.name || user.email?.split('@')[0] || '');
@@ -219,12 +214,8 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <Link
-            to="/pets/create"
-            className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-slate-900/50"
-          >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-slate-900/50 cursor-default">
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-full blur-3xl opacity-20 -mr-16 -mt-16 group-hover:opacity-30 transition-opacity"></div>
             <div className="relative z-10">
               <div className="inline-flex p-3 rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-slate-700/50 mb-4 group-hover:scale-110 transition-transform">
@@ -233,12 +224,9 @@ export default function ProfilePage() {
               <div className="text-3xl font-bold text-white mb-2">{stats.petsCreated}</div>
               <div className="text-slate-400 font-medium">Pets Created</div>
             </div>
-          </Link>
+          </div>
 
-          <Link
-            to="/adopted-pets"
-            className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-slate-900/50"
-          >
+          <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-slate-900/50 cursor-default">
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-full blur-3xl opacity-20 -mr-16 -mt-16 group-hover:opacity-30 transition-opacity"></div>
             <div className="relative z-10">
               <div className="inline-flex p-3 rounded-lg bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-slate-700/50 mb-4 group-hover:scale-110 transition-transform">
@@ -247,39 +235,12 @@ export default function ProfilePage() {
               <div className="text-3xl font-bold text-white mb-2">{stats.petsAdopted}</div>
               <div className="text-slate-400 font-medium">Pets Adopted</div>
             </div>
-          </Link>
-
-          <Link
-            to="/favorites"
-            className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-slate-900/50"
-          >
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-red-500/20 to-pink-500/20 rounded-full blur-3xl opacity-20 -mr-16 -mt-16 group-hover:opacity-30 transition-opacity"></div>
-            <div className="relative z-10">
-              <div className="inline-flex p-3 rounded-lg bg-gradient-to-br from-red-500/20 to-pink-500/20 border border-slate-700/50 mb-4 group-hover:scale-110 transition-transform">
-                <Heart className="w-6 h-6 text-red-400 fill-red-400" />
-              </div>
-              <div className="text-3xl font-bold text-white mb-2">{stats.favoritesCount}</div>
-              <div className="text-slate-400 font-medium">Favorites</div>
-            </div>
-          </Link>
+          </div>
         </div>
 
         <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6 md:p-8">
           <h3 className="text-xl font-bold text-white mb-4">Quick Actions</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Link
-              to="/pets/create"
-              className="flex items-center gap-3 p-4 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-600/50 hover:border-slate-500/50 rounded-lg transition-all duration-300 group"
-            >
-              <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-slate-700/50 group-hover:scale-110 transition-transform">
-                <Plus className="w-5 h-5 text-blue-400" />
-              </div>
-              <div>
-                <div className="text-white font-semibold">Add New Pet</div>
-                <div className="text-slate-400 text-sm">Create a pet listing</div>
-              </div>
-            </Link>
-
             <Link
               to="/adopted-pets"
               className="flex items-center gap-3 p-4 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-600/50 hover:border-slate-500/50 rounded-lg transition-all duration-300 group"
@@ -290,19 +251,6 @@ export default function ProfilePage() {
               <div>
                 <div className="text-white font-semibold">My Adopted Pets</div>
                 <div className="text-slate-400 text-sm">View your adopted pets</div>
-              </div>
-            </Link>
-
-            <Link
-              to="/favorites"
-              className="flex items-center gap-3 p-4 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-600/50 hover:border-slate-500/50 rounded-lg transition-all duration-300 group"
-            >
-              <div className="p-2 rounded-lg bg-gradient-to-br from-red-500/20 to-pink-500/20 border border-slate-700/50 group-hover:scale-110 transition-transform">
-                <Heart className="w-5 h-5 text-red-400 fill-red-400" />
-              </div>
-              <div>
-                <div className="text-white font-semibold">My Favorites</div>
-                <div className="text-slate-400 text-sm">View your favorite pets</div>
               </div>
             </Link>
 

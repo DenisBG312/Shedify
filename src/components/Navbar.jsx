@@ -189,19 +189,6 @@ export default function Navbar() {
               <div className="px-4 py-3 text-slate-300 text-sm">
                 Hello, <span className="text-white font-semibold">{getUserName()}</span>
               </div>
-              <NavLink
-                to="/dashboard"
-                onClick={toggleMenu}
-                className={({ isActive }) =>
-                  `block px-4 py-3 rounded-lg font-medium text-sm transition-all duration-300 ${
-                    isActive
-                      ? "text-white bg-gradient-to-r from-blue-500/30 to-purple-500/30 border-l-4 border-blue-400"
-                      : "text-slate-300 hover:text-white hover:bg-slate-700/50"
-                  }`
-                }
-              >
-                Dashboard
-              </NavLink>
             </>
           )}
 
