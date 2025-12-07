@@ -15,6 +15,7 @@ import CreatePet from "./components/pets/CreatePet";
 import ProfilePage from "./components/profile/ProfilePage";
 import MyAdoptedPets from "./components/adopted/MyAdoptedPets";
 import NotFound from "./components/NotFound";
+import Footer from "./components/Footer";
 
 import './index.css';
 
@@ -63,6 +64,8 @@ export default function App() {
           
           <Route path="*" element={<NotFound />} />
         </Routes>
+
+        <Footer />
       </BrowserRouter>
     </AuthProvider>
   );
