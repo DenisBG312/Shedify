@@ -5,8 +5,10 @@ import { supabase } from '../../lib/supabase';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import CreatePetModal from './CreatePetModal';
 import PetCard from './PetCard';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function PetsCatalog() {
+  const { user } = useAuth();
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -70,6 +72,7 @@ export default function PetsCatalog() {
               Discover your perfect companion from our loving pets waiting for a home
             </p>
           </div>
+          {user && (
           <button
             onClick={() => setIsModalOpen(true)}
             className="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/50"
@@ -77,6 +80,7 @@ export default function PetsCatalog() {
             <Plus className="w-5 h-5" />
             Add Pet
           </button>
+          )}
         </div>
 
         {error && (

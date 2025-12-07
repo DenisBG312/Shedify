@@ -18,6 +18,7 @@ import SheltersPage from "./components/shelters/SheltersPage";
 import FavoritesPage from "./components/favorites/FavoritesPage";
 import EventsPage from "./components/events/EventsPage";
 import ProfilePage from "./components/profile/ProfilePage";
+import NotFound from "./components/NotFound";
 
 import './index.css';
 
@@ -82,6 +83,9 @@ export default function App() {
               </PrivateRoute>
             } 
           />
+          
+          {/* 404 Catch-all route */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
