@@ -1,73 +1,73 @@
 import { Link } from "react-router-dom";
 import { 
   ArrowRight, 
-  FolderKanban, 
-  CheckSquare, 
-  Calendar,
+  Search, 
+  Heart, 
+  CheckCircle,
   Zap,
-  Users,
-  BarChart3,
-  Shield,
+  Share2,
+  Plus,
+  User,
   Sparkles
 } from "lucide-react";
 
 export default function Home() {
   const features = [
     {
-      icon: FolderKanban,
-      title: "Browse Adoptable Pets",
-      description: "Search hundreds of dogs, cats, and other pets waiting for a loving home.",
+      icon: Search,
+      title: "Search & Filter Pets",
+      description: "Easily find your perfect companion with advanced search and breed filtering. Browse through paginated results to discover pets that match your preferences.",
       iconColor: "text-blue-400",
       gradient: "from-blue-500 to-cyan-500",
       bgGradient: "from-blue-500/20 to-cyan-500/20"
     },
     {
-      icon: CheckSquare,
-      title: "Save Your Favorites",
-      description: "Keep track of the pets you love and revisit them anytime from your favorites.",
-      iconColor: "text-purple-400",
-      gradient: "from-purple-500 to-pink-500",
-      bgGradient: "from-purple-500/20 to-pink-500/20"
+      icon: Heart,
+      title: "Like Your Favorites",
+      description: "Show love to pets that catch your eye! Like pets to save them to your favorites list and help them get noticed by other potential adopters.",
+      iconColor: "text-red-400",
+      gradient: "from-red-500 to-pink-500",
+      bgGradient: "from-red-500/20 to-pink-500/20"
     },
     {
-      icon: Calendar,
-      title: "Adoption Events",
-      description: "Discover local adoption events and meet pets in person.",
-      iconColor: "text-orange-400",
-      gradient: "from-orange-500 to-red-500",
-      bgGradient: "from-orange-500/20 to-red-500/20"
-    },
-    {
-      icon: Users,
-      title: "Verified Shelters",
-      description: "Connect only with trusted shelters and rescues that care about every animal.",
+      icon: CheckCircle,
+      title: "Adopt Pets",
+      description: "Found your perfect match? Adopt pets directly through our platform. Track all your adopted pets in one convenient place.",
       iconColor: "text-green-400",
       gradient: "from-green-500 to-emerald-500",
       bgGradient: "from-green-500/20 to-emerald-500/20"
     },
     {
-      icon: BarChart3,
-      title: "Analytics & Reports",
-      description: "Get insights into your productivity with detailed analytics and reports.",
-      iconColor: "text-indigo-400",
-      gradient: "from-indigo-500 to-purple-500",
-      bgGradient: "from-indigo-500/20 to-purple-500/20"
+      icon: Share2,
+      title: "Share Pet Profiles",
+      description: "Help pets find homes by sharing their profiles with friends and family. Use our built-in share feature to spread the word.",
+      iconColor: "text-purple-400",
+      gradient: "from-purple-500 to-indigo-500",
+      bgGradient: "from-purple-500/20 to-indigo-500/20"
     },
     {
-      icon: Shield,
-      title: "Safe & Caring Matches",
-      description: "We help match pets with the right families for long-term, loving homes.",
-      iconColor: "text-teal-400",
-      gradient: "from-teal-500 to-cyan-500",
-      bgGradient: "from-teal-500/20 to-cyan-500/20"
+      icon: Plus,
+      title: "List Your Pets",
+      description: "Have a pet that needs a home? Create beautiful listings with photos and descriptions to help them find their forever family.",
+      iconColor: "text-cyan-400",
+      gradient: "from-cyan-500 to-blue-500",
+      bgGradient: "from-cyan-500/20 to-blue-500/20"
+    },
+    {
+      icon: User,
+      title: "Manage Your Profile",
+      description: "Track your adoption journey with personalized statistics. View your created pets, adopted pets, and manage your account all in one place.",
+      iconColor: "text-orange-400",
+      gradient: "from-orange-500 to-amber-500",
+      bgGradient: "from-orange-500/20 to-amber-500/20"
     }
   ];
 
   const stats = [
-    { value: "12K+", label: "Pets Adopted" },
-    { value: "3K+", label: "Happy Families" },
-    { value: "800+", label: "Partner Shelters" },
-    { value: "24/7", label: "Support & Care" }
+    { value: "Easy", label: "Search & Browse" },
+    { value: "Fast", label: "Adoption Process" },
+    { value: "Safe", label: "Pet Listings" },
+    { value: "Free", label: "To Use" }
   ];
 
   return (
@@ -104,9 +104,12 @@ export default function Home() {
                 </span>
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </Link>
-              <button className="px-8 py-4 rounded-xl font-semibold text-white border-2 border-slate-600 hover:border-slate-500 bg-slate-800/50 backdrop-blur-sm transition-all duration-300 hover:bg-slate-700/50">
-                How Adoption Works
-              </button>
+              <Link
+                to="/register"
+                className="px-8 py-4 rounded-xl font-semibold text-white border-2 border-slate-600 hover:border-slate-500 bg-slate-800/50 backdrop-blur-sm transition-all duration-300 hover:bg-slate-700/50"
+              >
+                Get Started
+              </Link>
             </div>
           </div>
         </div>
@@ -130,13 +133,13 @@ export default function Home() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
-            Everything You Need to
-            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"> Adopt Safely</span>
-          </h2>
-          <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-            Thoughtful tools that make discovering, meeting, and adopting pets simple and stress-free.
-          </p>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
+              Everything You Need to
+              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"> Find Your Pet</span>
+            </h2>
+            <p className="text-xl text-slate-400 max-w-2xl mx-auto">
+              Powerful features that make discovering, connecting with, and adopting pets simple and enjoyable.
+            </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -171,19 +174,27 @@ export default function Home() {
           <div className="relative z-10">
             <Zap className="w-12 h-12 text-yellow-400 mx-auto mb-6" />
             <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
-              Ready to Meet Your New Best Friend?
+              Ready to Find Your New Best Friend?
             </h2>
             <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-              Thousands of pets are waiting for a second chance. 
-              Create your free PetHub account and start your adoption journey today.
+              Browse our catalog of adoptable pets, create listings for pets in need, or adopt a companion today. 
+              Join PetHub and start making a difference in a pet's life.
             </p>
-            <Link
-              to="/dashboard"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl font-semibold text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50"
-            >
-              Start Your Journey
-              <ArrowRight className="w-5 h-5" />
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link
+                to="/register"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl font-semibold text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50"
+              >
+                Create Account
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+              <Link
+                to="/pets"
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-white border-2 border-slate-600 hover:border-slate-500 bg-slate-800/50 backdrop-blur-sm transition-all duration-300 hover:bg-slate-700/50"
+              >
+                Browse Without Account
+              </Link>
+            </div>
           </div>
         </div>
       </div>

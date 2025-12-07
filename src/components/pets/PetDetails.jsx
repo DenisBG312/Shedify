@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Heart, ArrowLeft, Calendar, User, Edit, Trash2, CheckCircle } from 'lucide-react';
+import { Heart, ArrowLeft, Calendar, User, Edit, Trash2, CheckCircle, Share2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { useAuth } from '../../contexts/AuthContext';
@@ -210,6 +210,34 @@ export default function PetDetails() {
     }
   };
 
+  const handleShare = async () => {
+    const url = window.location.href;
+    const shareData = {
+      title: `${pet.name} - PetHub`,
+      text: `Check out ${pet.name}${pet.breed ? `, a ${pet.breed}` : ''} on PetHub!`,
+      url: url
+    };
+
+    try {
+      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(url);
+        alert('Link copied to clipboard!');
+      }
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        try {
+          await navigator.clipboard.writeText(url);
+          alert('Link copied to clipboard!');
+        } catch (clipboardErr) {
+          console.error('Error copying to clipboard:', clipboardErr);
+          alert('Failed to share. Please copy the URL manually.');
+        }
+      }
+    }
+  };
+
   if (loading) {
     return <LoadingSpinner fullScreen text="Loading pet details..." />;
   }
@@ -407,6 +435,14 @@ export default function PetDetails() {
                     {isLiked ? 'Unlike This Pet' : 'Like This Pet'}
                   </>
                 )}
+              </button>
+              <button
+                onClick={handleShare}
+                className="flex items-center justify-center gap-2 px-6 py-4 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-600/50 hover:border-slate-500/50 text-white font-semibold rounded-lg transition-all duration-300 hover:scale-105"
+                title="Share this pet"
+              >
+                <Share2 className="w-5 h-5" />
+                <span className="hidden sm:inline">Share</span>
               </button>
             </div>
           </div>
