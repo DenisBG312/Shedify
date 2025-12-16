@@ -241,7 +241,6 @@ export default function CreatePetModal({ isOpen, onClose, onSuccess }) {
             />
           </div>
 
-          {/* Breed and Age Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label htmlFor="breed" className="block text-sm font-medium text-slate-300 mb-2">
