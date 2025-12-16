@@ -11,6 +11,7 @@ import PrivateRoute from "./components/guards/PrivateRoute";
 import PetsCatalog from "./components/pets/PetsCatalog";
 import PetDetails from "./components/pets/PetDetails";
 import CreatePet from "./components/pets/CreatePet";
+import EditPet from "./components/pets/PetEdit";
 
 import ProfilePage from "./components/profile/ProfilePage";
 import MyAdoptedPets from "./components/adopted/MyAdoptedPets";
@@ -28,40 +29,48 @@ export default function App() {
 
         <Routes>
           <Route path="/" element={<Home />} />
-          
+
           <Route path="/pets" element={<PetsCatalog />} />
           <Route path="/pets/:id" element={<PetDetails />} />
-          
+          <Route
+            path="/pets/edit/:id"
+            element={
+              <PrivateRoute>
+                <EditPet />
+              </PrivateRoute>
+            }
+          />
+
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          
-          <Route 
-            path="/pets/create" 
+
+          <Route
+            path="/pets/create"
             element={
               <PrivateRoute>
                 <CreatePet />
               </PrivateRoute>
-            } 
+            }
           />
-          
-          <Route 
-            path="/profile" 
+
+          <Route
+            path="/profile"
             element={
               <PrivateRoute>
                 <ProfilePage />
               </PrivateRoute>
-            } 
+            }
           />
-          
-          <Route 
-            path="/adopted-pets" 
+
+          <Route
+            path="/adopted-pets"
             element={
               <PrivateRoute>
                 <MyAdoptedPets />
               </PrivateRoute>
-            } 
+            }
           />
-          
+
           <Route path="*" element={<NotFound />} />
         </Routes>
 

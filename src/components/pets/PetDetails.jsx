@@ -4,7 +4,6 @@ import { Heart, ArrowLeft, Calendar, User, Edit, Trash2, CheckCircle, Share2 } f
 import { supabase } from '../../lib/supabase';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { useAuth } from '../../contexts/AuthContext';
-import EditPetModal from './EditPetModal';
 
 export default function PetDetails() {
   const { id } = useParams();
@@ -16,7 +15,6 @@ export default function PetDetails() {
   const [isOwner, setIsOwner] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [liking, setLiking] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [adopting, setAdopting] = useState(false);
   const [isAdopted, setIsAdopted] = useState(false);
 
@@ -40,7 +38,7 @@ export default function PetDetails() {
         }
 
         setPet(data);
-        
+
         if (isAuthenticated && user && data.owner_id === user.id) {
           setIsOwner(true);
         }
@@ -70,7 +68,7 @@ export default function PetDetails() {
 
   const handleDelete = async () => {
     if (!isOwner) return;
-    
+
     if (!window.confirm('Are you sure you want to delete this pet listing?')) {
       return;
     }
@@ -147,24 +145,6 @@ export default function PetDetails() {
       alert(`Error: ${errorMessage}`);
     } finally {
       setLiking(false);
-    }
-  };
-
-  const handleEditSuccess = async () => {
-    try {
-      const { data, error: fetchError } = await supabase
-        .from('pets')
-        .select('*')
-        .eq('id', id)
-        .single();
-
-      if (fetchError) throw fetchError;
-
-      if (data) {
-        setPet(data);
-      }
-    } catch (err) {
-      console.error('Error refreshing pet data:', err);
     }
   };
 
@@ -298,7 +278,7 @@ export default function PetDetails() {
                 </div>
               )}
             </div>
-            
+
             <div className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/90 backdrop-blur-sm border border-slate-700/50">
               <Heart className={`w-5 h-5 ${isLiked ? 'text-red-400 fill-red-400' : 'text-red-400'}`} />
               <span className="text-white font-semibold">{pet.likes || 0}</span>
@@ -335,13 +315,13 @@ export default function PetDetails() {
 
               {isOwner && (
                 <div className="flex gap-3 mb-6">
-                  <button
-                    onClick={() => setIsEditModalOpen(true)}
+                  <Link
+                    to={`/pets/edit/${id}`}
                     className="flex items-center gap-2 px-4 py-2 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-600/50 hover:border-slate-500/50 rounded-lg text-slate-300 hover:text-white transition-all"
                   >
                     <Edit className="w-4 h-4" />
                     Edit
-                  </button>
+                  </Link>
                   <button
                     onClick={handleDelete}
                     className="flex items-center gap-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 hover:border-red-500/50 rounded-lg text-red-400 hover:text-red-300 transition-all"
@@ -418,11 +398,10 @@ export default function PetDetails() {
               <button
                 onClick={handleLike}
                 disabled={liking || isOwner || !isAuthenticated || isAdopted}
-                className={`flex-1 flex items-center justify-center gap-2 px-6 py-4 font-semibold rounded-lg transition-all duration-300 ${
-                  isLiked
+                className={`flex-1 flex items-center justify-center gap-2 px-6 py-4 font-semibold rounded-lg transition-all duration-300 ${isLiked
                     ? 'bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white hover:scale-105 hover:shadow-lg hover:shadow-pink-500/50'
                     : 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white hover:scale-105 hover:shadow-lg hover:shadow-purple-500/50'
-                } disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100`}
+                  } disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100`}
               >
                 {liking ? (
                   <>
@@ -448,12 +427,7 @@ export default function PetDetails() {
           </div>
         </div>
 
-        <EditPetModal
-          isOpen={isEditModalOpen}
-          onClose={() => setIsEditModalOpen(false)}
-          onSuccess={handleEditSuccess}
-          pet={pet}
-        />
+
       </div>
     </div>
   );

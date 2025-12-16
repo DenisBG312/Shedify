@@ -8,7 +8,7 @@ export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
@@ -70,13 +70,13 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      isAuthenticated, 
+    <AuthContext.Provider value={{
+      user,
+      isAuthenticated,
       loading,
-      login, 
+      login,
       signUp,
-      logout 
+      logout
     }}>
       {children}
     </AuthContext.Provider>
